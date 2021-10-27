@@ -9,7 +9,7 @@ BULLET *createBullet(unsigned short x, unsigned short y){
 	BULLET *bullet = (BULLET*) calloc(1, sizeof(BULLET));
 	
 	if(bullet){
-		bullet->caractere = 2;
+		bullet->body	 = '.';
 		bullet->position = createPosition();
 		bullet->position->x = x;
 		bullet->position->y = y;
@@ -26,25 +26,35 @@ BULLET *createBullet(unsigned short x, unsigned short y){
 void renderBullet(BULLET *bullet){
 	if(bullet){
 		gotoXY(bullet->position->x, bullet->position->y);
-		printf("%c", bullet->caractere);
+		printf("%c", bullet->body);
+	}
+}
+
+/*
+	Função que limpa a bala da tela
+	parameters: BULLET *bullet
+	return: void
+*/
+void clearBullet(BULLET *bullet){
+	if(bullet){
+		gotoXY(bullet->position->x, bullet->position->y);
+		printf(" ");
 	}
 }
 
 /*
 	Atualiza posição da bala
 	parameters: void
-	return: void
+	return: bool
 */
-bool updateBullet(BULLET *bullet){
+bool updateBullet(BULLET *bullet, unsigned short width){
 	if(bullet){
-		gotoXY(bullet->position->x, bullet->position->y);
-		printf(" ");
+		clearBullet(bullet);
 		
 		bullet->position->y--;
-		gotoXY(bullet->position->x, bullet->position->y);
-		printf("%c", bullet->caractere);
+		renderBullet(bullet);
 		
-		return (bullet->position->y == 0);
+		return (bullet->position->y <= width);
 	}
 	
 	return false;

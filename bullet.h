@@ -10,12 +10,13 @@
 
 // BULLET
 typedef struct{
-	unsigned char caractere;
+	unsigned char body;
 	POSITION *position;
 }BULLET;
 
 BULLET *createBullet(unsigned short x, unsigned short y);
 void renderBullet(BULLET *bullet);
-bool updateBullet(BULLET *bullet);
+void clearBullet(BULLET *bullet);
+bool updateBullet(BULLET *bullet, unsigned short height);
 
 #endif

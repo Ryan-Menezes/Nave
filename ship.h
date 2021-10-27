@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <conio.h>
 #include <ctype.h>
 #include <windows.h>
 #include "helpers.h"
@@ -10,7 +11,8 @@
 
 #define SHIP_WIDTH 5
 #define SHIP_HEIGHT 3
-#define LIMIT_BULLETS 100
+#define LIMIT_BULLETS 5
+#define HEIGHT_MENU 4
 
 // NAVE
 typedef struct{

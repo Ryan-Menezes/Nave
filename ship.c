@@ -27,6 +27,8 @@ SHIP *createShip(){
 		ship->fuel 					= 100;
 		ship->speed 				= 2;
 		ship->amountBullets			= 0;
+		
+		for(unsigned int i = 0; i < LIMIT_BULLETS; i++) ship->bullets[i] = NULL;
 	}
 	
 	return ship;
@@ -78,45 +80,58 @@ void updateShip(SHIP *ship, DIMENSION *limits){
 		// VERIFICA SE ALGUMA TECLA FOI PRESSIONADA
 		if(kbhit()){
 			key = getch();
-			clearShip(ship);
-		}	
-		
-		// ATUALIZA A POSIÇÃO DA NAVE	
-		switch(key){
-			case UP:
-				ship->position->y -= ship->speed;
-				break;
-			case RIGHT:
-				ship->position->x += ship->speed;
-				break;
-			case DOWN:
-				ship->position->y += ship->speed;
-				break;
-			case LEFT:
-				ship->position->x -= ship->speed;
-				break;
-			case SPACE:
-				shoot(ship);
-				break;
+			setbuf(stdin, NULL);
+			
+			// ATUALIZA A POSIÇÃO DA NAVE	
+			switch(key){
+				case UP:
+					clearShip(ship);
+					ship->position->y -= ship->speed;
+					break;
+				case RIGHT:
+					clearShip(ship);
+					ship->position->x += ship->speed;
+					break;
+				case DOWN:
+					clearShip(ship);
+					ship->position->y += ship->speed;
+					break;
+				case LEFT:
+					clearShip(ship);
+					ship->position->x -= ship->speed;
+					break;
+				case SPACE:
+					shoot(ship);
+					break;
+			}
+			
+			if(key != SPACE){
+				// VERIFICA SE A NAVE ÚLTRAPASSOU OS LIMITES DA TELA
+				if(ship->position->y <= HEIGHT_MENU) ship->position->y = HEIGHT_MENU + 1;
+				if(ship->position->x <= 0) ship->position->x = 1;
+				
+				if(ship->position->y + ship->dimension->height >= limits->height) ship->position->y = limits->height - ship->dimension->height - 1;
+				if(ship->position->x + ship->dimension->width >= limits->width) ship->position->x = limits->width - ship->dimension->width - 1;
+				
+				// RENDERIZA NAVE
+				renderShip(ship);
+			}
 		}
-		
-		// VERIFICA SE A NAVE ÚLTRAPASSOU OS LIMITES DA TELA
-		if(ship->position->y < 0) ship->position->y = 0;
-		if(ship->position->x < 0) ship->position->x = 0;
-		
-		if(ship->position->y + ship->dimension->height >= limits->height) ship->position->y = limits->height - ship->dimension->height;
-		if(ship->position->x + ship->dimension->width >= limits->width) ship->position->x = limits->width - ship->dimension->width - 1;
 		
 		// RENDERIZA E ATULIZA BALAS
 		if(ship->bullets && ship->amountBullets > 0){
-			for(unsigned int i = 0; i < ship->amountBullets; i++){
-				renderBullet(ship->bullets[i]);
-				if(updateBullet(ship->bullets[i])){
-					gotoXY(ship->bullets[i]->position->x, ship->bullets[i]->position->y);
-					printf(" ");
+			for(unsigned int i = 0; i < LIMIT_BULLETS; i++){
+				// VERIFICA SE A BALA NÃO É NULA
+				if(ship->bullets[i]){
+					renderBullet(ship->bullets[i]);
 					
-					ship->amountBullets--;
-					free(ship->bullets[i]);
+					// SE A BALA ÚLTRAPASSOU OS LIMITES DA TELA, ELA SERÁ REMOVIDA
+					if(updateBullet(ship->bullets[i], HEIGHT_MENU)){
+						clearBullet(ship->bullets[i]);
+						
+						ship->amountBullets--;
+						ship->bullets[i] = NULL;
+					}
 				}
 			}	
 		}
@@ -124,17 +139,23 @@ void updateShip(SHIP *ship, DIMENSION *limits){
 }
 
 /*
-	Adiciona uma nova bala na nave
+	Dispara uma bala da nave
 	parameters: SHIP *ship
 	return: void
 */
 void shoot(SHIP *ship){
-	if(ship){
+	if(ship && ship->amountBullets < LIMIT_BULLETS && ship->position->y > HEIGHT_MENU + 1){
 		BULLET *bullet = createBullet(ship->position->x + (ship->dimension->width / 2), ship->position->y - (ship->dimension->height / 2));
 	
 		if(bullet && ship->amountBullets < LIMIT_BULLETS){
-			ship->amountBullets++;
-			ship->bullets[ship->amountBullets - 1] = bullet;
+			for(unsigned int i = 0; i < LIMIT_BULLETS; i++){
+				// VERIFICA SE A BALA É NULA
+				if(ship->bullets[i] == NULL){
+					ship->bullets[i] = bullet;
+					ship->amountBullets++;
+					break;
+				}
+			}
 		}
 	}
 }

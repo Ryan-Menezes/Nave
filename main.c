@@ -1,3 +1,12 @@
+/*
+	Jogo de navinha desenvolvido em linguagem C, cujo o objetivo é marcar a maior pontuação possível, enquanto você evita que asteroides atinjam você!
+	
+	Desenvolvido por: 	Ryan de Menezes Nobre Ciriaco
+	GitHub: 			https://github.com/Ryan-Menezes
+	E-Mail: 			menezesryan1010@gmail.com
+	linkedin: 			https://www.linkedin.com/in/ryan-menezes-845080201/
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "game.h"
@@ -9,7 +18,6 @@ SHIP *ship = NULL;
 // FUNCTIONS
 void inicialize();
 void loop();
-void render();
 void update();
 
 void main(int argc, char *argv[]) {
@@ -31,11 +39,17 @@ void inicialize(){
 	ship->position->x = (WINDOW_WIDTH / 2) - (ship->dimension->width / 2);
 	ship->position->y = (WINDOW_HEIGHT / 2) - (ship->dimension->height / 2);
 	
+	// MUDANDO O TITULO DA JANELA
+	SetConsoleTitle(TITLE);
+	
 	// MUDANDO A DIMENÇÃO DA JANELA
 	setWindowDimension(WINDOW_WIDTH, WINDOW_HEIGHT);
 	
 	// RENDERIZANDO O PAINEL
 	renderScoreboard(game, ship);
+	
+	// RENDERIZANDO NAVE
+	renderShip(ship);
 }
 
 /*
@@ -45,21 +59,11 @@ void inicialize(){
 */
 void loop(){
 	if(game->start){
-		render();
 		update();
-		loop();
-		sleep(game->speed);
+		Sleep(game->speed);
 	}
-}
-
-/*
-	Renderiza elementos do jogo
-	parameters: void
-	return: void
-*/
-void render(){
-	// RENDERIZA NAVE
-	renderShip(ship);
+	
+	loop();
 }
 
 /*
@@ -70,4 +74,7 @@ void render(){
 void update(){
 	// ATUALIZA NAVE
 	updateShip(ship, &(DIMENSION){WINDOW_WIDTH, WINDOW_HEIGHT});
+	
+	// GERA NOVOS ASTEROIDES, ATUALIZA POSIÇÂO DE ASTEROIDES, VERIFICA COLISÃO ENTRE ASTEROID, BALA E NAVE
+	updateGame(game, ship);
 }
