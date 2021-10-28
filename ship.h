@@ -11,7 +11,7 @@
 
 #define SHIP_WIDTH 5
 #define SHIP_HEIGHT 3
-#define LIMIT_BULLETS 5
+#define LIMIT_BULLETS 10
 #define HEIGHT_MENU 4
 
 // NAVE
@@ -22,7 +22,6 @@ typedef struct{
 	unsigned char lifes;
 	unsigned char fuel;
 	unsigned short speed;
-	unsigned short amountBullets;
 	BULLET *bullets[LIMIT_BULLETS];
 }SHIP;
 
@@ -42,5 +41,7 @@ void renderShip(SHIP *ship);
 void clearShip();
 void updateShip(SHIP *ship, DIMENSION *limits);
 void shoot(SHIP *ship);
+void addBullet(SHIP *ship, unsigned short index);
+void removeBullet(SHIP *ship, unsigned short index);
 
 #endif

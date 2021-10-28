@@ -19,8 +19,8 @@ typedef struct{
 
 DIMENSION *createDimension();
 POSITION *createPosition();
-void gotoXY(unsigned int x, unsigned int y);
+void gotoXY(unsigned short x, unsigned short y);
 void hideCursor();
-void setWindowDimension(unsigned int width, unsigned int height);
+void setWindowDimension(unsigned short width, unsigned short height);
 
 #endif

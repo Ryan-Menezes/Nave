@@ -12,9 +12,10 @@
 #include "bullet.h"
 #include "ship.h"
 
+#define PLUSSCORE 10
 #define WINDOW_WIDTH 100
 #define WINDOW_HEIGHT 30
-#define LIMIT_ASTEROIDS 5
+#define LIMIT_ASTEROIDS 10
 #define TITLE "NAVE"
 
 // MAPA
@@ -27,7 +28,7 @@ typedef struct{
 	bool start;
 	unsigned int score;
 	unsigned short level;
-	unsigned short speed;
+	unsigned char speed;
 	MAP *map;
 	ASTEROID *asteroids[LIMIT_ASTEROIDS];
 }GAME;
@@ -36,5 +37,9 @@ MAP *createMap();
 GAME *createGame();
 void renderScoreboard(GAME *game, SHIP *ship);
 void updateGame(GAME *game, SHIP *ship);
+void addAsteroid(GAME *game, SHIP *ship, unsigned short index);
+void removeAsteroid(GAME *game, SHIP *ship, unsigned short index);
+bool hasColision(POSITION *p1, POSITION *p2);
+void createExplosion(POSITION *position);
 
 #endif

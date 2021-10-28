@@ -32,10 +32,10 @@ DIMENSION *createDimension(){
 
 /*
 	Posiciona o cursor do mouse numa posição indicada
-	parameters: unsigned int x, unsigned int y
+	parameters: unsigned short x, unsigned short y
 	return: void
 */
-void gotoXY(unsigned int x, unsigned int y){
+void gotoXY(unsigned short x, unsigned short y){
 	HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
 	COORD coords = {x, y};
 	
@@ -55,10 +55,10 @@ void hideCursor(){
 
 /*
 	Define o tamanho da janela
-	parameters: void
+	parameters: unsigned short width, unsigned short height
 	return: void
 */
-void setWindowDimension(unsigned int width, unsigned int height){
+void setWindowDimension(unsigned short width, unsigned short height){
 	HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
 	SMALL_RECT sr;
 	COORD consoleSize;

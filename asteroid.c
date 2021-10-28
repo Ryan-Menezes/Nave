@@ -59,3 +59,17 @@ bool updateAsteroid(ASTEROID *asteroid, unsigned short height){
 	
 	return false;
 }
+
+/*
+	Limpa o console
+	parameters: unsigned short width, unsigned short height
+	return: void
+*/
+void clearConsole(unsigned short width, unsigned short height){
+	for(unsigned short l = 0; l < width; l++){
+		for(unsigned short c = 0; c < height; c++){
+			gotoXY(l, c);
+			printf(" ");
+		}
+	}
+}

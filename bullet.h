@@ -8,6 +8,8 @@
 #include <windows.h>
 #include "helpers.h"
 
+#define DELAY_BULLET 500
+
 // BULLET
 typedef struct{
 	unsigned char body;

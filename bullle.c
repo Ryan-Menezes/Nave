@@ -9,8 +9,8 @@ BULLET *createBullet(unsigned short x, unsigned short y){
 	BULLET *bullet = (BULLET*) calloc(1, sizeof(BULLET));
 	
 	if(bullet){
-		bullet->body	 = '.';
-		bullet->position = createPosition();
+		bullet->body	 	= '.';
+		bullet->position 	= createPosition();
 		bullet->position->x = x;
 		bullet->position->y = y;
 	}	

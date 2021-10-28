@@ -15,8 +15,8 @@ SHIP *createShip(){
 			{'#', '#', '#', '#', '#'}
 		};
 		
-		for(unsigned int l = 0; l < SHIP_HEIGHT; l++)
-			for(unsigned int c = 0; c < SHIP_WIDTH; c++)
+		for(unsigned short l = 0; l < SHIP_HEIGHT; l++)
+			for(unsigned short c = 0; c < SHIP_WIDTH; c++)
 				ship->body[l][c] = body[l][c];
 		
 		ship->position				= createPosition();
@@ -25,10 +25,9 @@ SHIP *createShip(){
 		ship->dimension->height 	= SHIP_HEIGHT;
 		ship->lifes 				= 5;
 		ship->fuel 					= 100;
-		ship->speed 				= 2;
-		ship->amountBullets			= 0;
+		ship->speed 				= 1;
 		
-		for(unsigned int i = 0; i < LIMIT_BULLETS; i++) ship->bullets[i] = NULL;
+		for(unsigned short i = 0; i < LIMIT_BULLETS; i++) ship->bullets[i] = NULL;
 	}
 	
 	return ship;
@@ -41,10 +40,10 @@ SHIP *createShip(){
 */
 void renderShip(SHIP *ship){
 	if(ship){
-		for(unsigned int l = 0; l < ship->dimension->height; l++){
+		for(unsigned short l = 0; l < ship->dimension->height; l++){
 			gotoXY(ship->position->x, ship->position->y + l);
 			
-			for(unsigned int c = 0; c < ship->dimension->width; c++){
+			for(unsigned short c = 0; c < ship->dimension->width; c++){
 				printf("%c", ship->body[l][c]);
 			}
 		}
@@ -58,10 +57,10 @@ void renderShip(SHIP *ship){
 */
 void clearShip(SHIP *ship){
 	if(ship){
-		for(unsigned int l = 0; l < ship->dimension->height; l++){
+		for(unsigned short l = 0; l < ship->dimension->height; l++){
 			gotoXY(ship->position->x, ship->position->y + l);
 			
-			for(unsigned int c = 0; c < ship->dimension->width; c++){
+			for(unsigned short c = 0; c < ship->dimension->width; c++){
 				printf(" ");
 			}
 		}
@@ -70,7 +69,7 @@ void clearShip(SHIP *ship){
 
 /*
 	Função que atualiza os atributos da nave
-	parameters: SHIP *ship
+	parameters: SHIP *ship, DIMENSION *limits
 	return: void
 */
 void updateShip(SHIP *ship, DIMENSION *limits){
@@ -119,21 +118,15 @@ void updateShip(SHIP *ship, DIMENSION *limits){
 		}
 		
 		// RENDERIZA E ATULIZA BALAS
-		if(ship->bullets && ship->amountBullets > 0){
-			for(unsigned int i = 0; i < LIMIT_BULLETS; i++){
-				// VERIFICA SE A BALA NÃO É NULA
-				if(ship->bullets[i]){
-					renderBullet(ship->bullets[i]);
-					
-					// SE A BALA ÚLTRAPASSOU OS LIMITES DA TELA, ELA SERÁ REMOVIDA
-					if(updateBullet(ship->bullets[i], HEIGHT_MENU)){
-						clearBullet(ship->bullets[i]);
-						
-						ship->amountBullets--;
-						ship->bullets[i] = NULL;
-					}
-				}
-			}	
+		for(unsigned short i = 0; i < LIMIT_BULLETS; i++){
+			// VERIFICA SE A BALA NÃO É NULA
+			if(ship->bullets[i]){
+				renderBullet(ship->bullets[i]);
+				
+				// SE A BALA ÚLTRAPASSOU OS LIMITES DA TELA, ELA SERÁ REMOVIDA
+				if(updateBullet(ship->bullets[i], HEIGHT_MENU))
+					removeBullet(ship, i);
+			}
 		}
 	}
 }
@@ -144,18 +137,39 @@ void updateShip(SHIP *ship, DIMENSION *limits){
 	return: void
 */
 void shoot(SHIP *ship){
-	if(ship && ship->amountBullets < LIMIT_BULLETS && ship->position->y > HEIGHT_MENU + 1){
-		BULLET *bullet = createBullet(ship->position->x + (ship->dimension->width / 2), ship->position->y - (ship->dimension->height / 2));
-	
-		if(bullet && ship->amountBullets < LIMIT_BULLETS){
-			for(unsigned int i = 0; i < LIMIT_BULLETS; i++){
-				// VERIFICA SE A BALA É NULA
-				if(ship->bullets[i] == NULL){
-					ship->bullets[i] = bullet;
-					ship->amountBullets++;
-					break;
-				}
+	if(ship && ship->position->y > HEIGHT_MENU + 1){
+		for(unsigned short i = 0; i < LIMIT_BULLETS; i++){
+			// VERIFICA SE A BALA É NULA
+			if(ship->bullets[i] == NULL){
+				addBullet(ship, i);
+				break;
 			}
 		}
+	}
+}
+
+/*
+	Adiciona uma bala no array
+	parameters: SHIP *ship, unsigned short index
+	return: void
+*/
+void addBullet(SHIP *ship, unsigned short index){
+	if(ship){
+		BULLET *bullet = createBullet(ship->position->x + (ship->dimension->width / 2), ship->position->y - (ship->dimension->height / 2));
+
+		ship->bullets[index] = bullet;
+	}
+}
+
+/*
+	Remove uma bala do array
+	parameters: SHIP *ship, unsigned short index
+	return: void
+*/
+void removeBullet(SHIP *ship, unsigned short index){
+	if(ship){
+		clearBullet(ship->bullets[index]);
+		free(ship->bullets[index]);
+		ship->bullets[index] = NULL;
 	}
 }

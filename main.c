@@ -45,6 +45,9 @@ void inicialize(){
 	// MUDANDO A DIMENÇÃO DA JANELA
 	setWindowDimension(WINDOW_WIDTH, WINDOW_HEIGHT);
 	
+	// LIMPANDO O CONSOLE
+	clearConsole(WINDOW_WIDTH, WINDOW_HEIGHT);
+	
 	// RENDERIZANDO O PAINEL
 	renderScoreboard(game, ship);
 	

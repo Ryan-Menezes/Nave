@@ -18,5 +18,6 @@ ASTEROID *createAsteroid(unsigned short x, unsigned short y);
 void renderAsteroid(ASTEROID *asteroid);
 void clearAsteroid(ASTEROID *asteroid);
 bool updateAsteroid(ASTEROID *asteroid, unsigned short height);
+void clearConsole(unsigned short width, unsigned short height);
 
 #endif
