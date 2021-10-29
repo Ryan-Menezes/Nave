@@ -20,7 +20,6 @@ typedef struct{
 	POSITION *position;
 	DIMENSION *dimension;
 	unsigned char lifes;
-	unsigned char fuel;
 	unsigned short speed;
 	BULLET *bullets[LIMIT_BULLETS];
 }SHIP;
@@ -30,10 +29,14 @@ typedef enum{
 	ENTER 		= 13,
 	SPACE 		= 32,
 	HEART		= 3,
-	UP			= 'w',
-	DOWN		= 's',
-	RIGHT		= 'd',
-	LEFT		= 'a'
+	UP 			= 72,
+	RIGHT 		= 77,
+	LEFT 		= 75,
+	DOWN 		= 80,
+	W			= 87,
+	A			= 65,
+	S			= 83,
+	D			= 68
 }KEYS;
 
 SHIP *createShip();

@@ -9,7 +9,7 @@ GAME *createGame(){
 	GAME *game = (GAME*) calloc(1, sizeof(GAME));
 	
 	if(game){
-		game->start 			= true;
+		game->start 			= false;
 		game->score 			= 0;
 		game->level 			= 1;
 		game->speed 			= 50;
@@ -18,6 +18,37 @@ GAME *createGame(){
 	}
 	
 	return game;
+}
+
+/*
+	Inicia o jogo
+	parameters: GAME *game, SHIP *ship
+	return: void
+*/
+void startGame(GAME *game, SHIP *ship){
+	char *msg = "STARTS AT:";
+	
+	game->start = true;
+	
+	// RENDERIZANDO O PAINEL
+	renderScoreboard(game, ship);
+	
+	// CONTAGEM REGRESSIVA
+	gotoXY(WINDOW_WIDTH / 2 - strlen(msg) / 2, WINDOW_HEIGHT / 2 - 1);
+	printf(msg);
+	
+	for(unsigned short i = 5; i > 0; i--){
+		gotoXY(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+		printf("%i", i);
+		Sleep(i * 500);
+	}
+	
+	// LIMPA MENSAGEM
+	gotoXY(WINDOW_WIDTH / 2 - strlen(msg) / 2, WINDOW_HEIGHT / 2 - 1);
+	for(unsigned short i = 0; i < strlen(msg); i++) printf(" ");
+	
+	// RENDERIZANDO NAVE
+	renderShip(ship);
 }
 
 /*
@@ -94,6 +125,7 @@ void updateGame(GAME *game, SHIP *ship){
 						// VERFICA SE HOUVE COLISÃO
 						if(hasColision(game->asteroids[j]->position, ship->bullets[i]->position)){
 							game->score += PLUSSCORE;
+							// game->level += game->score % PLUSSCORE;
 							createExplosion(ship->bullets[i]->position);
 							removeBullet(ship, i);
 							removeAsteroid(game, ship, j);
@@ -175,5 +207,89 @@ void createExplosion(POSITION *position){
 	for(char i = 2 ; i >= -2; i--){
 		gotoXY(position->x - 2, position->y + i);
 		printf("         ");
+	}
+}
+
+/*
+	Apresenta o menu de opções na tela
+	parameters: GAME *game, SHIP *ship
+	return: void
+*/
+void menu(GAME *game, SHIP *ship){
+	const unsigned short ROWSBANNER = 7;
+	unsigned char banner[][200] = {
+		"00000000000000000000000000000",
+		"01100001011111010000101111110",
+		"01010001010001010000101000000",
+		"01001001011111010000101111110",
+		"01000101010001001001001000000",
+		"01000011010001000110001111110",
+		"00000000000000000000000000000"
+	};
+	
+	const unsigned short AMOUNTOP = 2;
+	unsigned char options[][100] = {"NEW GAME", "EXIT"};
+	unsigned char *arrow = ">>";
+	unsigned char op = '\0';
+	unsigned short i = 0, j = 0;
+	int c = 0;
+	
+	// LIMPANDO O CONSOLE
+	clearConsole(WINDOW_WIDTH, WINDOW_HEIGHT);
+	
+	// RENDERIZA O BANNER
+	for(i = 0; i < ROWSBANNER; i++){
+		for(j = 0; j < strlen(banner[i]); j++){			
+			for(c = 0; c < 2; c++){
+				gotoXY(WINDOW_WIDTH / 2 - strlen(banner[i]) + j - c, WINDOW_HEIGHT / 2 - ROWSBANNER + i);
+			
+				if(banner[i][j] == '0') printf("%c", 219);
+				else printf(" ");
+			}
+		}
+	}
+	
+	// RENDERIZA O MENU
+	for(i = 0; i < AMOUNTOP; i++){
+		gotoXY(WINDOW_WIDTH / 2 - strlen(options[i]) / 2, WINDOW_HEIGHT / 2 - AMOUNTOP +  ROWSBANNER / 2 + i);
+		printf("%s", options[i]);
+	}
+	
+	i = 0;
+	
+	// PEGA A OPÇÃO SELECIONADA
+	while(op != ENTER){
+		// RENDERIZA A SETA
+		gotoXY((WINDOW_WIDTH / 2 - strlen(options[i]) / 2) - strlen(arrow) - 1, WINDOW_HEIGHT / 2 - AMOUNTOP +  ROWSBANNER / 2 + i);
+		printf(arrow);
+		
+		op = getch();
+		setbuf(stdin, NULL);
+		
+		// LIMPA A SETA
+		gotoXY((WINDOW_WIDTH / 2 - strlen(options[i]) / 2) - strlen(arrow) - 1, WINDOW_HEIGHT / 2 +  ROWSBANNER / 2 - AMOUNTOP + i);
+		for(unsigned int j = 0; j < strlen(arrow); j++) printf(" ");
+		
+		// MOVIMENTA A SETA
+		switch(toupper(op)){
+			case UP:
+				if(i > 0) i--;		
+				break;
+			case DOWN:
+				if(i <= 0) i++;		
+				break;
+		}
+	}
+	
+	// LIMPANDO O CONSOLE
+	clearConsole(WINDOW_WIDTH, WINDOW_HEIGHT);
+	
+	// VERIFICA OPÇÃO SELECIONADA
+	switch(i){
+		case 0:
+			startGame(game, ship);
+			break;
+		default:
+			exit(0);
 	}
 }

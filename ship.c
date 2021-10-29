@@ -24,7 +24,6 @@ SHIP *createShip(){
 		ship->dimension->width 		= SHIP_WIDTH;
 		ship->dimension->height 	= SHIP_HEIGHT;
 		ship->lifes 				= 5;
-		ship->fuel 					= 100;
 		ship->speed 				= 1;
 		
 		for(unsigned short i = 0; i < LIMIT_BULLETS; i++) ship->bullets[i] = NULL;
@@ -82,19 +81,23 @@ void updateShip(SHIP *ship, DIMENSION *limits){
 			setbuf(stdin, NULL);
 			
 			// ATUALIZA A POSIÇÃO DA NAVE	
-			switch(key){
+			switch(toupper(key)){
+				case W:
 				case UP:
 					clearShip(ship);
 					ship->position->y -= ship->speed;
 					break;
+				case D:
 				case RIGHT:
 					clearShip(ship);
 					ship->position->x += ship->speed;
 					break;
+				case S:
 				case DOWN:
 					clearShip(ship);
 					ship->position->y += ship->speed;
 					break;
+				case A:
 				case LEFT:
 					clearShip(ship);
 					ship->position->x -= ship->speed;

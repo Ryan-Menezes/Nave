@@ -35,11 +35,13 @@ typedef struct{
 
 MAP *createMap();
 GAME *createGame();
+void startGame(GAME *game, SHIP *ship);
 void renderScoreboard(GAME *game, SHIP *ship);
 void updateGame(GAME *game, SHIP *ship);
 void addAsteroid(GAME *game, SHIP *ship, unsigned short index);
 void removeAsteroid(GAME *game, SHIP *ship, unsigned short index);
 bool hasColision(POSITION *p1, POSITION *p2);
 void createExplosion(POSITION *position);
+void menu(GAME *game, SHIP *ship);
 
 #endif
