@@ -35,10 +35,6 @@ void inicialize(){
 	game = createGame();
 	ship = createShip();
 	
-	// CENTRALIZANDO NAVE NA TELA
-	ship->position->x = (WINDOW_WIDTH / 2) - (ship->dimension->width / 2);
-	ship->position->y = (WINDOW_HEIGHT / 2) - (ship->dimension->height / 2);
-	
 	// MUDANDO O TITULO DA JANELA
 	SetConsoleTitle(TITLE);
 	
@@ -56,7 +52,8 @@ void loop(){
 		update();
 		Sleep(game->speed);
 	}else{
-		menu(game, ship);
+		if(game->status == START) menu(game, ship);
+		else gameover(game);
 	}
 	
 	loop();

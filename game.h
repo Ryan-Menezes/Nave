@@ -12,6 +12,8 @@
 #include "bullet.h"
 #include "ship.h"
 
+#define START 1
+#define GAMEOVER 0
 #define PLUSSCORE 10
 #define WINDOW_WIDTH 100
 #define WINDOW_HEIGHT 30
@@ -28,7 +30,9 @@ typedef struct{
 	bool start;
 	unsigned int score;
 	unsigned short level;
+	unsigned char lifes;
 	unsigned char speed;
+	unsigned char status;
 	MAP *map;
 	ASTEROID *asteroids[LIMIT_ASTEROIDS];
 }GAME;
@@ -36,12 +40,13 @@ typedef struct{
 MAP *createMap();
 GAME *createGame();
 void startGame(GAME *game, SHIP *ship);
-void renderScoreboard(GAME *game, SHIP *ship);
+void renderScoreboard(GAME *game);
 void updateGame(GAME *game, SHIP *ship);
 void addAsteroid(GAME *game, SHIP *ship, unsigned short index);
-void removeAsteroid(GAME *game, SHIP *ship, unsigned short index);
+void removeAsteroid(GAME *game, unsigned short index);
 bool hasColision(POSITION *p1, POSITION *p2);
 void createExplosion(POSITION *position);
 void menu(GAME *game, SHIP *ship);
+void gameover(GAME *game);
 
 #endif

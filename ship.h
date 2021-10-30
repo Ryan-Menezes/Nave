@@ -19,7 +19,6 @@ typedef struct{
 	unsigned char body[SHIP_HEIGHT][SHIP_WIDTH];
 	POSITION *position;
 	DIMENSION *dimension;
-	unsigned char lifes;
 	unsigned short speed;
 	BULLET *bullets[LIMIT_BULLETS];
 }SHIP;
@@ -46,5 +45,6 @@ void updateShip(SHIP *ship, DIMENSION *limits);
 void shoot(SHIP *ship);
 void addBullet(SHIP *ship, unsigned short index);
 void removeBullet(SHIP *ship, unsigned short index);
+bool shipHasColision(SHIP *ship, POSITION *position);
 
 #endif

@@ -23,7 +23,6 @@ SHIP *createShip(){
 		ship->dimension				= createDimension();
 		ship->dimension->width 		= SHIP_WIDTH;
 		ship->dimension->height 	= SHIP_HEIGHT;
-		ship->lifes 				= 5;
 		ship->speed 				= 1;
 		
 		for(unsigned short i = 0; i < LIMIT_BULLETS; i++) ship->bullets[i] = NULL;
@@ -175,4 +174,19 @@ void removeBullet(SHIP *ship, unsigned short index){
 		free(ship->bullets[index]);
 		ship->bullets[index] = NULL;
 	}
+}
+
+/*
+	Verifica se ouve uma colisão entre a nave e algum objeto
+	parameters: SHIP *ship, POSITION *position
+	return: bool
+*/
+bool shipHasColision(SHIP *ship, POSITION *position){
+	if(ship && position){
+		if(position->x >= ship->position->x && position->x <= ship->position->x + ship->dimension->width && position->y >= ship->position->y && position->y <= ship->position->y + ship->dimension->height){
+			return true;
+		}
+	}
+	
+	return false;
 }
